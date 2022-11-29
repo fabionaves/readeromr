@@ -1,1 +1,28 @@
 A Python OMR  (Optical Mark Reader) script. Made with OpenCV, pytesseract and pdf2image libraries.
+
+INSTALLATION INSTRUCTIONS
+
+1. Clone the repository and acess directory.
+git clone git clone https://github.com/fabionaves/readeromr/
+cd readeromr
+
+2. Create envoriment and load it.
+python3 -m venv env
+source env/bin/activate
+
+3. Install readeromr requeriments.
+pip install wheel
+pip install -r requeriments.txt
+
+4. Install poppler.
+sudo apt-get update
+sudo apt-get install -y poppler-utils
+
+
+4. Configure template.ini file.
+PATH = 
+POPPLER_PATH = 
+IMG_PATH = 
+
+5. Script Usage
+python readeromr.py -f example200dpiMono.pdf -q 90 -t template.ini
