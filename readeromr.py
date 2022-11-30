@@ -121,7 +121,7 @@ def find_question_bubble_contours(img_slice, question_number, question_position,
     blurred = cv2.GaussianBlur(gray, (11, 11), 0)
     edged = cv2.Canny(blurred, 75, 200)
     thresh = cv2.threshold(blurred, 0, 255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C | cv2.THRESH_OTSU)[1]
-    cnts = cv2.findContours(c.copy(), cv2.RETR_EXTERNAL,
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
 
