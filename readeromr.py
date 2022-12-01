@@ -276,8 +276,8 @@ number_of_questions = args['questions']
 CONFIG = load_template_conf(args['template'])
 
 path = CONFIG['path']
-#poppler_path = config['poppler_path']
-poppler_path =path+'poppler-22.11.0/Library/bin/'
+poppler_path = CONFIG['poppler_path']
+#poppler_path =path+'poppler-22.11.0/Library/bin/'
 img_path = CONFIG['img_path']
 pytesseract.tesseract_cmd = CONFIG['tesseract_cmd']
 print(poppler_path)
