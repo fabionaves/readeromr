@@ -3,7 +3,7 @@ A Python OMR  (Optical Mark Reader) script. Made with OpenCV, pytesseract and pd
 UBUNTU INSTALLATION INSTRUCTIONS
 
 1. Clone the repository and acess directory.
-git clone git clone https://github.com/fabionaves/readeromr/
+git clone https://github.com/fabionaves/readeromr/
 cd readeromr
 
 2. Create envoriment and load it.
