@@ -7,10 +7,11 @@ from pytesseract import image_to_string, pytesseract
 from pdf2image import convert_from_path
 import os
 import configparser
+import distutils
 
 
 def debug(img, path, name):
-    if not CONFIG['debug']:
+    if not distutils.util.strtobool(CONFIG['debug']):
         return False
     elif not path:
         return False
@@ -19,7 +20,7 @@ def debug(img, path, name):
     cv2.imwrite(path+'/'+str(name)+'.jpg', img) 
 
 def debug_message(msn):
-    if not CONFIG['debug']:
+    if not distutils.util.strtobool(CONFIG['debug']):
         return False
     with open('debug.txt', 'a') as f:
          f.write(str(msn)+'\n')
@@ -44,7 +45,7 @@ def get_top_code(img_code, debug_path):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
     opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=1)
     invert = 255 - opening
-    return image_to_string(invert).strip()[4:]
+    return image_to_string(invert).strip()
 
 
 def get_bubble_area(image, debug_path=False):
@@ -115,6 +116,7 @@ def get_question_image(img_slice, question_position):
 
 def find_question_bubble_contours(img_slice, question_number, question_position, debug_path=False):
     question_img = get_question_image(img_slice, question_position)
+    #debug(question_img, debug_path, 'question')
     question_number = question_number+1
     #get the question contours
     gray = cv2.cvtColor(question_img, cv2.COLOR_BGR2GRAY)
@@ -136,13 +138,15 @@ def find_question_bubble_contours(img_slice, question_number, question_position,
         # in order to label the contour as a question, region
         # should be sufficiently wide, sufficiently tall, and
         # have an aspect ratio approximately equal to 1
-        #debug_message(str(cont)+' '+str(w)+' '+str(h)+' AR:'+str(ar))
         if w >= 40 and h >= 40 and w <= 90 and h <= 90 and ar >= 0.5 and ar <= 1.2:
-            #print(w, h, ar)
+            debug_message(str(question_number)+' => '+str(cont)+' '+str(w)+' '+str(h)+' AR:'+str(ar))
             bubblesCount = bubblesCount + 1
             questionCnts.append(c)
 
-    questionCnts = contours.sort_contours(questionCnts)[0]
+    if questionCnts:
+        questionCnts = contours.sort_contours(questionCnts)[0]
+    else:
+        return {'questionCnts': questionCnts, 'bubblesCount':0}
     
     mask = np.zeros(thresh.shape, dtype="uint8")
     cv2.drawContours(mask, questionCnts, -1, 255, -1)
@@ -171,7 +175,7 @@ def get_filled_bubble(img_slice, question_number, question_position, questionCnt
     gray = cv2.cvtColor(question_img, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (11, 11), 0)
     thresh = cv2.threshold(blurred, 0, 255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C | cv2.THRESH_OTSU)[1]
-    
+
     opcaoEscolhida = '_'
     cnts_opcao = []
 
@@ -272,8 +276,8 @@ number_of_questions = args['questions']
 CONFIG = load_template_conf(args['template'])
 
 path = CONFIG['path']
-poppler_path = CONFIG['poppler_path']
-#poppler_path =path+'poppler-22.11.0/Library/bin/'
+#poppler_path = config['poppler_path']
+poppler_path =path+'poppler-22.11.0/Library/bin/'
 img_path = CONFIG['img_path']
 pytesseract.tesseract_cmd = CONFIG['tesseract_cmd']
 print(poppler_path)
