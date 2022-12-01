@@ -1,3 +1,4 @@
+setuptools==63.2.0
 imutils==0.5.4
 numpy==1.23.4
 opencv-python==4.6.0.66
